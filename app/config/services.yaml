@@ -1,0 +1,42 @@
+# Конфигурация сервисов
+services:
+    # Конфигурация по умолчанию для сервисов в папке src/
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        # public: false
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Exception/'
+            - '../src/Model/'
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+   
+    # Явно регистрируем логгер как сервис
+    Psr\Log\LoggerInterface: '@monolog.logger'
+
+    # Регистрируем сервисы приложения
+    App\Interface\TaskTrackerInterface:
+        class: App\Service\JiraService
+        arguments:
+            - '@logger'
+            - '%env(JIRA_BASE_URL)%'
+            - '%env(JIRA_TOKEN)%'
+
+    App\Modules\Scheduler\Interface\TaskRouterInterface:
+        class: App\Modules\Scheduler\Service\JiraRouterService
+        arguments:
+            - '@Symfony\Component\Messenger\MessageBusInterface'
+            - '@logger'
+            - '%env(JIRA_PROJECT_ID)%'
+            - '%env(JIRA_TEST_MODE)%'
+            - '%env(JIRA_TEST_TAG)%'
+            - '%env(JIRA_AI_TAG)%'
+            - '%env(JIRA_AI_BASE_STATUS)%'
+
+
+      
+    

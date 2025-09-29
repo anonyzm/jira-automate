@@ -1,0 +1,7 @@
+jira_callback:
+    path: /jira/callback
+    controller: App\Modules\Scheduler\Controller\JiraController::callback
+    methods: [POST]
+    defaults:
+        _format: json
+

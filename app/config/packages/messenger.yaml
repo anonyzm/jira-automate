@@ -1,0 +1,18 @@
+framework:
+    messenger:
+        transports:
+            jira_event_transport:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    metadata.broker.list: '%env(KAFKA_BROKERS)%'
+                    group.id: '%env(KAFKA_TOPIC_EVENT)%'
+                    auto.offset.reset: 'earliest'
+                    producer_topic: '%env(KAFKA_TOPIC_EVENT)%'
+                    consumer_topics: 
+                        - '%env(KAFKA_TOPIC_EVENT)%'
+
+        routing:
+            'App\Messenger\DTO\AutomateMessage': jira_event_transport
+
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer

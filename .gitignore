@@ -1,0 +1,8 @@
+docker/jira/postgres/data/*
+docker/jira/data/var/*
+!docker/jira/data/var/dbconfig.xml
+app/cache/*
+app/logs/*
+app/vendor/*
+.env
+docker-compose.override.yml

@@ -1,0 +1,20 @@
+# Настройка Monolog
+monolog:
+    channels:
+        - app
+    handlers:
+        # Основной файловый логгер
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/app.log"
+            level: debug
+            channels: ["app"]
+#            formatter: monolog.formatter.json
+
+        # Логгер для ошибок
+        error:
+            type: stream
+            path: "%kernel.logs_dir%/error.log"
+            level: error
+            channels: ["app"]
+#           formatter: monolog.formatter.json
