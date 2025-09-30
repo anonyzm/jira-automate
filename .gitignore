@@ -1,6 +1,7 @@
 docker/jira/postgres/data/*
 docker/jira/data/var/*
 !docker/jira/data/var/dbconfig.xml
+docker/postgres/data/*
 app/cache/*
 app/logs/*
 app/vendor/*

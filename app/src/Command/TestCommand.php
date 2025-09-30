@@ -8,7 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Modules\Scheduler\Interface\TaskRouterInterface;
+use App\Modules\Scheduler\Interface\RouterInterface;
 use App\Tests\TestTask;
 
 #[AsCommand(
@@ -18,7 +18,7 @@ use App\Tests\TestTask;
 class TestCommand extends Command
 {
     public function __construct(
-        private readonly TaskRouterInterface $routerService
+        private readonly RouterInterface $routerService
     ) {
         parent::__construct();
     }

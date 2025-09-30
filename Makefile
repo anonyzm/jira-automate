@@ -1,5 +1,8 @@
 env:
 	cp .env.dist .env
+	
+compose-override:
+	cp docker-compose.override.yml.dist docker-compose.override.yml
 
 up:
 	docker compose up -d
@@ -35,6 +38,12 @@ rebuild:
 
 logs:
 	docker compose logs --tail 50 app
+
+migrate:
+	docker compose exec app php bin/console doctrine:migrations:migrate --no-interaction
+
+migrate-status:
+	docker compose exec app php bin/console doctrine:migrations:status
 
 prune:
 	docker system prune -f

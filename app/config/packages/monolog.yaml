@@ -18,3 +18,4 @@ monolog:
             level: error
             channels: ["app"]
 #           formatter: monolog.formatter.json
+

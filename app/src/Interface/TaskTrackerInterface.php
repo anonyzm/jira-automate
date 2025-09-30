@@ -4,6 +4,8 @@ namespace App\Interface;
 
 interface TaskTrackerInterface
 {
+    public function getTaskLink(string $taskKey): string;
+    
     public function getTask(string $taskKey): array;
 
     public function createTask(array $taskData): array;

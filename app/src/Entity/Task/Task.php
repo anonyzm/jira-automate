@@ -6,6 +6,8 @@ use App\Interface\ArrayableInterface;
 
 class Task implements ArrayableInterface
 {
+    public string $link = '';
+
     public function __construct(
         public string $id = '',
         public string $key = '',
@@ -13,7 +15,6 @@ class Task implements ArrayableInterface
         public string $description = '',
         public array $tags = [],
         public ?TaskType $type = null,
-        public ?TaskUser $creator = null,
         public ?TaskUser $assignee = null,
         public ?TaskProject $project = null,
         public ?TaskStatus $status = null
@@ -22,16 +23,15 @@ class Task implements ArrayableInterface
     public function fromArray(array $data): self
     {
         return new self(
-            $data['issue']['id'] ?? '',
-            $data['issue']['key'] ?? '',
-            $data['issue']['fields']['summary'] ?? '',
-            $data['issue']['fields']['description'] ?? '',
-            $data['issue']['fields']['labels'] ?? [],
-            (new TaskType())->fromArray($data['issue']['fields']['issuetype']),
-            (new TaskUser())->fromArray($data['user']),
-            (new TaskUser())->fromArray($data['user']),
-            (new TaskProject())->fromArray($data['issue']['fields']['project']),
-            (new TaskStatus())->fromArray($data['issue']['fields']['status'])
+            $data['id'] ?? '',
+            $data['key'] ?? '',
+            $data['fields']['summary'] ?? '',
+            $data['fields']['description'] ?? '',
+            $data['fields']['labels'] ?? [],
+            (new TaskType())->fromArray($data['fields']['issuetype']),
+            (new TaskUser())->fromArray($data['fields']['assignee']),
+            (new TaskProject())->fromArray($data['fields']['project']),
+            (new TaskStatus())->fromArray($data['fields']['status'])
         );
     }
 
@@ -42,9 +42,9 @@ class Task implements ArrayableInterface
             'key' => $this->key,
             'title' => $this->title,
             'description' => $this->description,
+            'link' => $this->link,
             'tags' => $this->tags,
             'type' => $this->type->toArray(),
-            'creator' => $this->creator->toArray(),
             'assignee' => $this->assignee->toArray(),
             'project' => $this->project->toArray(),
             'status' => $this->status->toArray(),

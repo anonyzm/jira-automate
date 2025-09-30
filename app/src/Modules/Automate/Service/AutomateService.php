@@ -2,15 +2,16 @@
 
 namespace App\Modules\Automate\Service;
 
+use App\Entity\JiraData;
 use Psr\Log\LoggerInterface;
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Entity\Task\Task;
-use App\Modules\Automate\Rule\ReportChangedRule;
 use App\Modules\Automate\Interface\RuleInterface;
+use App\Modules\Automate\Rule\ReportStatusChangedRule;
 
-class AutomateService {
+class AutomateService { 
     private array $rules = [
-        ReportChangedRule::class,
+        ReportStatusChangedRule::class,
     ];
 
     public function __construct(
@@ -18,27 +19,28 @@ class AutomateService {
         protected ContainerInterface $container,
     ) {}
 
-    public function automate(Task $task): void
+    public function automate(JiraData $data): void
     {
-        $this->logger->info('[AutomateService:automate]', ['task' => $task]);
+        $dataArray = $data->toArray();
+        $this->logger->info('[AutomateService:automate]', ['data' => $dataArray]);
         
         foreach ($this->rules as $ruleClass) {
             try {
                 /** @var RuleInterface $rule */
                 $rule = $this->container->get($ruleClass);
                 
-                if ($rule->isApplicable($task)) {
-                    $rule->apply($task);
+                if ($rule->isApplicable($data)) {
+                    $rule->apply($data);
                     $this->logger->info('[AutomateService:automate] Rule applied', [
                         'rule' => $ruleClass,
-                        'task' => $task
+                        'data' => $dataArray
                     ]);
                 }
             } catch (\Exception $e) {
                 $this->logger->error('[AutomateService:automate] Error applying rule', [
                     'rule' => $ruleClass,
                     'error' => $e->getMessage(),
-                    'task' => $task
+                    'data' => $dataArray
                 ]);
             }
         }

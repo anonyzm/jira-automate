@@ -13,6 +13,7 @@ class JiraService implements TaskTrackerInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly string $jiraLink,
         private readonly string $baseUrl,
         private readonly string $token
         )
@@ -24,6 +25,11 @@ class JiraService implements TaskTrackerInterface
             'verify' => false,
             'scheme' => 'https',
         ]);
+    }
+
+    public function getTaskLink(string $taskKey): string
+    {
+        return $this->jiraLink . '/browse/' . $taskKey;
     }
 
     public function getTask(string $taskKey): array

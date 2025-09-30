@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Messenger\Handler;
+namespace App\Modules\Automate\Handler;
 
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -19,11 +19,18 @@ class AutomateHandler
 
     public function __invoke(AutomateMessage $message): void
     {
-        $this->logger->info('[AutomateHandler:__invoke]', [
-            'uuid' => $message->uuid, 
-            'task' => $message->task
-        ]);
-        // обрабатываем таск согласно правилам
-        $this->automateService->automate($message->task);
+        try {
+            $this->logger->info('[AutomateHandler:__invoke]', [
+                'uuid' => $message->uuid, 
+                'task' => print_r($message->data, true),
+            ]);
+            // обрабатываем таск согласно правилам
+            $this->automateService->automate($message->data);
+        } catch (\Exception $e) {
+            $this->logger->error('[AutomateHandler:__invoke] Error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 }

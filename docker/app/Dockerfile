@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y \
     libzstd-dev \
     libssl-dev \
     pkg-config \
-    && docker-php-ext-install mbstring exif pcntl bcmath gd
+    libpq-dev \
+    && docker-php-ext-install mbstring exif pcntl bcmath gd pdo pdo_pgsql
 
 # Устанавливаем PHP расширения для Kafka
 RUN pecl channel-update pecl.php.net \

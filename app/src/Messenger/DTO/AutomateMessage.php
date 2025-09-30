@@ -2,12 +2,12 @@
 
 namespace App\Messenger\DTO;
 
-use App\Entity\Task\Task;
+use App\Entity\JiraData;
 
 class AutomateMessage
 {
     public function __construct(
         public string $uuid,
-        public Task $task
+        public JiraData $data
     ) {}
 }

@@ -11,6 +11,8 @@ services:
     environment:
       APP_ENV: ${APP_ENV}
       APP_DEBUG: ${APP_DEBUG}
+      DATABASE_DSN: postgresql://${POSTGRES_USER:-jira_automate}:${POSTGRES_PASSWORD:-jira_automate_password}@${POSTGRES_HOST:-postgres}:5432/${POSTGRES_DB:-jira_automate}
+      JIRA_LINK: ${JIRA_LINK}
       JIRA_BASE_URL: ${JIRA_BASE_URL}
       JIRA_TOKEN: ${JIRA_TOKEN}
       MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
@@ -28,6 +30,24 @@ services:
       - jira-automate
     depends_on:
       - kafka
+      - postgres
+
+# ============================== Database =============================
+  postgres:
+    image: postgres:15-alpine
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-jira_automate}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jira_automate_password}
+      POSTGRES_DB: ${POSTGRES_DB:-jira_automate}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
+    networks:
+      - jira-automate
+    restart: unless-stopped
 
 # ============================== Kafka ===============================
   zookeeper:

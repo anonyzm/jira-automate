@@ -23,20 +23,40 @@ services:
         class: App\Service\JiraService
         arguments:
             - '@logger'
+            - '%env(JIRA_LINK)%'
             - '%env(JIRA_BASE_URL)%'
             - '%env(JIRA_TOKEN)%'
 
-    App\Modules\Scheduler\Interface\TaskRouterInterface:
+    # Регистрируем сервисы модуля Report
+    App\Modules\Report\Interface\ReportServiceInterface:
+        class: App\Modules\Report\Service\PachkaService
+        arguments:
+            - '@logger'
+            - '%env(PACHKA_WEBHOOK)%'
+
+    # Регистрируем сервисы модуля Scheduler
+    App\Modules\Scheduler\Interface\RouterInterface:
         class: App\Modules\Scheduler\Service\JiraRouterService
         arguments:
-            - '@Symfony\Component\Messenger\MessageBusInterface'
             - '@logger'
+            - '@Symfony\Component\Messenger\MessageBusInterface'
             - '%env(JIRA_PROJECT_ID)%'
             - '%env(JIRA_TEST_MODE)%'
             - '%env(JIRA_TEST_TAG)%'
             - '%env(JIRA_AI_TAG)%'
             - '%env(JIRA_AI_BASE_STATUS)%'
 
+    # Регистрируем сервисы модуля Automate
+    App\Modules\Automate\Service\AutomateService:
+        arguments:
+            - '@logger'
+            - '@service_container'
 
-      
+    # Регистрируем контроллеры как публичные сервисы
+    App\Modules\Scheduler\Controller\JiraController:
+        public: true
+        arguments:
+            - '@logger'
+            - '@App\Modules\Scheduler\Interface\RouterInterface'
+            - '@App\Interface\TaskTrackerInterface'
     
