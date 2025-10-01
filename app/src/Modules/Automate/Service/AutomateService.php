@@ -27,25 +27,15 @@ class AutomateService {
 
         foreach ($this->rules as $ruleClass) {
             try {
-                $this->logger->info('[AutomateService:checkingRule:1]', ['ruleClass' => $ruleClass]);
                 /** @var RuleInterface $rule */
                 $rule = $this->container->get($ruleClass);
-                $this->logger->info('[AutomateService:checkingRule:2]', ['ruleClass' => get_class($rule)]);
 
-                /** @var RuleInterface $rule */
                 if ($rule->isApplicable($data)) {
-                    $this->logger->info('[AutomateService:checkingRule:3]', ['ruleClass' => $ruleClass]);
-
-                    // $this->logger->info('[AutomateService:automate] Applying rule', [
-                    //     'rule' => $ruleClass,
-                    //     'data' => $dataArray
-                    // ]);
                     $rule->apply($data);
-                    // $this->logger->info('[AutomateService:automate] Rule applied', [
-                    //     'rule' => $ruleClass,
-                    //     'data' => $dataArray
-                    // ]);
-                    $this->logger->info('[AutomateService:checkingRule:4]', ['ruleClass' => $ruleClass]);
+                    $this->logger->info('[AutomateService:automate] Rule applied', [
+                        'rule' => $ruleClass,
+                        'data' => $dataArray
+                    ]);
 
                 }
             } catch (\Exception $e) {

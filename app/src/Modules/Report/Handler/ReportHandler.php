@@ -19,6 +19,7 @@ class ReportHandler
 
     public function __invoke(ReportMessageInteface $message): void
     {
+        $this->logger->info('[ReportHandler:__invoke]');
         try {
             $this->logger->info('[ReportHandler:__invoke]', [
                 'message' => $message->json(),
