@@ -52,6 +52,10 @@ services:
             - '@logger'
             - '@service_container'
 
+    # Регистрируем правила автоматизации
+    App\Modules\Automate\Rule\ReportStatusChangedRule:
+        public: true
+
     # Регистрируем контроллеры как публичные сервисы
     App\Modules\Scheduler\Controller\JiraController:
         public: true
@@ -59,4 +63,3 @@ services:
             - '@logger'
             - '@App\Modules\Scheduler\Interface\RouterInterface'
             - '@App\Interface\TaskTrackerInterface'
-    

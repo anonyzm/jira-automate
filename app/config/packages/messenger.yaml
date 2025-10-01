@@ -26,5 +26,5 @@ framework:
             'App\Messenger\DTO\ReportMessage': report_transport
 
         serializer:
-            # default_serializer: messenger.transport.symfony_serializer
-            default_serializer: App\Messenger\JsonSerializer
+            default_serializer: messenger.transport.symfony_serializer
+

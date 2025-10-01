@@ -24,6 +24,8 @@ class ReportStatusChangedRule implements RuleInterface
 
     public function isApplicable(JiraData $data): bool
     {
+        $this->logger->info('[ReportStatusChangedRule:isApplicable:1]');
+
         $hasTag = false;
         $isStatusChanged = false;
         // проверяем что у таска есть хотя бы один из нужных лейблов
@@ -33,6 +35,8 @@ class ReportStatusChangedRule implements RuleInterface
                 break;
             }
         }
+        $this->logger->info(message: '[ReportStatusChangedRule:isApplicable:2]');
+
         // проверяем что статус таска изменился
         foreach ($data->changeLog as $change) {
             /** @var ChangeLog $change */
@@ -41,6 +45,8 @@ class ReportStatusChangedRule implements RuleInterface
                 break;
             }
         }
+        $this->logger->info(message: '[ReportStatusChangedRule:isApplicable:3]');
+
         return $hasTag && $isStatusChanged;
     }
 

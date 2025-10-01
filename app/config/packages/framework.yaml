@@ -13,6 +13,15 @@ framework:
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
 
+    # serializer:
+    #         enabled: true
+    #         # ... other serializer configurations
+    #         normalizers:
+    #             - Symfony\Component\Serializer\Normalizer\ArrayDenormalizer
+    #             - Symfony\Component\Serializer\Normalizer\ObjectNormalizer
+    #         encoders:
+    #             - json
+
     #esi: true
     #fragments: true
     php_errors:

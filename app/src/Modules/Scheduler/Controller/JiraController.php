@@ -54,11 +54,12 @@ class JiraController
                 }
             }
 
-            $jiraData = new JiraData(
-                task: $task,   
-                jiraUser: $jiraUser, 
-                changeLog: $changeLog
-            );
+            // инициализируем структуру данных
+            $jiraData = new JiraData();
+            $jiraData->setTask($task);
+            $jiraData->setJiraUser($jiraUser);
+            $jiraData->setChangeLog($changeLog);
+
             $this->routerService->route($jiraData);
         } catch (\Exception $e) {
             $this->logger->error('Jira callback error', [
