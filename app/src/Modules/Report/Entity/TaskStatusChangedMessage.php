@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Modules\Report\DTO;
+namespace App\Modules\Report\Entity;
 
 use App\Modules\Report\Interface\ReportMessageInteface;
-use App\Modules\Report\Entity\ReportMessage;
 
 class TaskStatusChangedMessage implements ReportMessageInteface
 {
     public function __construct(
-        private string $taskCode,
-        private string $taskTitle,
-        private string $taskLink,
-        private string $taskUser,
-        private string $taskStatusOld,
-        private string $taskStatusNew,
+        public string $taskCode,
+        public string $taskTitle,
+        public string $taskLink,
+        public string $taskUser,
+        public string $taskStatusOld,
+        public string $taskStatusNew,
     ) {}
 
-    public function json(): ReportMessage
+    public function message(): string
     {
         $message = sprintf(
             "🚩 **Изменен статус задачи** 🚩\n" .
@@ -32,6 +31,6 @@ class TaskStatusChangedMessage implements ReportMessageInteface
             $this->taskStatusOld,
             $this->taskStatusNew,
         );
-        return new ReportMessage($message);
+        return $message;
     }
 }

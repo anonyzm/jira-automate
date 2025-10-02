@@ -2,7 +2,7 @@
 
 namespace App\Modules\Report\Service;
 
-use App\Modules\Report\Interface\ReportMessageInteface;
+use App\Modules\Report\DTO\PachkaMessage;
 use Psr\Log\LoggerInterface;
 use GuzzleHttp\Client;
 
@@ -17,11 +17,11 @@ class PachkaService
         $this->client = new Client();
     }
 
-    public function sendMessage(ReportMessageInteface $reportMessage): void
+    public function sendMessage(string $message): void
     {
-        $message = (string) $reportMessage->json();
-        $this->logger->info('[PachkaService:sendMessage]', ['message' => $message]);
-        $this->post($message);
+        $pachkaMessage = new PachkaMessage($message);
+        $this->logger->info('[PachkaService:sendMessage]', ['message' => $pachkaMessage]);
+        $this->post((string) $pachkaMessage);
     }
 
     private function post(string $message): bool

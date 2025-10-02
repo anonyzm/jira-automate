@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Report\Entity;
+namespace App\Modules\Report\DTO;
 
 use Stringable;
 
-class ReportMessage implements Stringable
+class PachkaMessage implements Stringable
 {
     public function __construct(
         private string $message,

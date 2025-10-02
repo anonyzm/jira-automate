@@ -60,8 +60,8 @@ COPY docker/app/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/app/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Создаем пользователя для приложения
-RUN groupadd --gid 1001 application 
-RUN useradd --uid 1001 --gid application --shell /bin/bash --create-home application
+RUN groupadd --gid 1000 application 
+RUN useradd --uid 1000 --gid application --shell /bin/bash --create-home application
 RUN usermod -aG www-data application
 RUN usermod -aG application www-data
 

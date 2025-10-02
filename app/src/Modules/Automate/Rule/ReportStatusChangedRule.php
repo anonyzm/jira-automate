@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;    
 use App\Entity\ChangeLog;
 use App\Messenger\DTO\ReportMessage;    
-use App\Modules\Report\DTO\TaskStatusChangedMessage;
+use App\Modules\Report\Entity\TaskStatusChangedMessage;
 
 class ReportStatusChangedRule implements RuleInterface 
 {
@@ -58,18 +58,23 @@ class ReportStatusChangedRule implements RuleInterface
                 break;
             }
         }
-         // отправляем сообщение в очередь для автоматизации
-         $this->bus->dispatch(
-            new ReportMessage(
-                message: new TaskStatusChangedMessage(
-                    taskCode: $data->task->key,
-                    taskTitle: $data->task->title,
-                    taskLink: $data->task->link,
-                    taskUser: $data->jiraUser->displayName,
-                    taskStatusOld: $oldStatus,
-                    taskStatusNew: $newStatus,
-                )
-            )
+
+        $message = new TaskStatusChangedMessage(
+            taskCode: $data->task->key,
+            taskTitle: $data->task->title,
+            taskLink: $data->task->link,
+            taskUser: $data->jiraUser->displayName,
+            taskStatusOld: $oldStatus,
+            taskStatusNew: $newStatus,
         );
+
+        $this->logger->info('[ReportStatusChangedRule:apply]', ['message' => (string) $message->message()]);
+
+         // отправляем сообщение в очередь для автоматизации
+        $this->bus->dispatch(
+            new ReportMessage(
+                type: $message::class,
+                message: $message
+        ));
     }
 }

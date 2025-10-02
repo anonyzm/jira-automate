@@ -2,10 +2,10 @@
 
 namespace App\Modules\Report\Handler;
 
+use App\Messenger\DTO\ReportMessage;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Psr\Log\LoggerInterface;
-use App\Modules\Report\Interface\ReportMessageInteface;
 use App\Modules\Report\Interface\ReportServiceInterface;
 
 #[AsMessageHandler]
@@ -17,15 +17,15 @@ class ReportHandler
         private ReportServiceInterface $reportService
     ) {}
 
-    public function __invoke(ReportMessageInteface $message): void
+    public function __invoke(ReportMessage $message): void
     {
-        $this->logger->info('[ReportHandler:__invoke]');
+        $this->logger->info('[ReportHandler:__invoke]', [
+            'type' => $message->type, 
+            'message' => $message->message
+        ]);
         try {
-            $this->logger->info('[ReportHandler:__invoke]', [
-                'message' => $message->json(),
-            ]);
             // отправляем уведомление
-            $this->reportService->sendMessage($message);
+            $this->reportService->sendMessage($message->message->message());
         } catch (\Exception $e) {
             $this->logger->error('[ReportHandler:__invoke] Error', [
                 'error' => $e->getMessage(),
