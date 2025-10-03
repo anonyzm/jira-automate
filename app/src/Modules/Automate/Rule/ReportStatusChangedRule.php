@@ -59,14 +59,14 @@ class ReportStatusChangedRule implements RuleInterface
             }
         }
 
-        $message = new TaskStatusChangedMessage(
-            taskCode: $data->task->key,
-            taskTitle: $data->task->title,
-            taskLink: $data->task->link,
-            taskUser: $data->jiraUser->displayName,
-            taskStatusOld: $oldStatus,
-            taskStatusNew: $newStatus,
-        );
+        $message = (new TaskStatusChangedMessage())->fromArray([
+            'taskCode' => $data->task->key,
+            'taskTitle' => $data->task->title,
+            'taskLink' => $data->task->link,
+            'taskUser' => $data->jiraUser->displayName,
+            'taskStatusOld' => $oldStatus,
+            'taskStatusNew' => $newStatus,
+        ]);
 
         $this->logger->info('[ReportStatusChangedRule:apply]', ['message' => (string) $message->message()]);
 

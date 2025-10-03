@@ -18,6 +18,12 @@ services:
     # Явно регистрируем логгер как сервис
     Psr\Log\LoggerInterface: '@monolog.logger'
 
+    # Инициализируем JsonSerializer для ReportMessage
+    App\Messenger\JsonSerializer:
+        class: App\Messenger\JsonSerializer
+        arguments:
+            - '@logger'
+
     # Регистрируем сервисы приложения
     App\Interface\TaskTrackerInterface:
         class: App\Service\JiraService

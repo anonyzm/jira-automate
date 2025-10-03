@@ -19,13 +19,14 @@ class ReportHandler
 
     public function __invoke(ReportMessage $message): void
     {
+        $this->logger->info('[ReportHandler:__invoke]');
         $this->logger->info('[ReportHandler:__invoke]', [
             'type' => $message->type, 
-            'message' => $message->message
+            'message' => $message->getMessage()->message()
         ]);
         try {
             // отправляем уведомление
-            $this->reportService->sendMessage($message->message->message());
+            $this->reportService->sendMessage($message->getMessage()->message());
         } catch (\Exception $e) {
             $this->logger->error('[ReportHandler:__invoke] Error', [
                 'error' => $e->getMessage(),

@@ -22,6 +22,10 @@ framework:
     #         encoders:
     #             - json
 
+    profiler:
+        collect: false
+        collect_parameter: 'profile'
+
     #esi: true
     #fragments: true
     php_errors:

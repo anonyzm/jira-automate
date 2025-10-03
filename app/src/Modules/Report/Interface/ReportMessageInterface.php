@@ -2,7 +2,7 @@
 
 namespace App\Modules\Report\Interface;
 
-interface ReportMessageInteface
+interface ReportMessageInterface
 {
     public function message(): string;
 }

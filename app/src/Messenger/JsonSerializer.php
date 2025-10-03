@@ -2,23 +2,25 @@
 
 namespace App\Messenger;
 
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
+use \Symfony\Component\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 class JsonSerializer implements SerializerInterface    
 {
-    public function decode(array $encodedEnvelope): Envelope
-    {        
-        $message = $this->unmarshal($encodedEnvelope['body']);
-        return new Envelope($message);
+    public function serialize(mixed $data, string $format = 'json', array $context = []): string
+    {    
+        if ($format !== 'json') {
+            throw new \InvalidArgumentException("Format must be 'json'");
+        }
+        return $this->marshal($data);
     }
 
-    public function encode(Envelope $envelope): array
+    public function deserialize(mixed $data, string $type = '', string $format = 'json', array $context = []): mixed
     {
-        return [
-            'body' => $this->marshal($envelope->getMessage()),
-            'headers' => [],
-        ];
+        if ($format !== 'json') { 
+            throw new \InvalidArgumentException("Format must be 'json'");
+        }
+        return $this->unmarshal($data);
     }
 
     //-------------------------private methods-------------------------
@@ -91,15 +93,15 @@ class JsonSerializer implements SerializerInterface
         $className = $config['class'];
         $attributes = $config['attributes'];
 
-        try {
+        //try {
             $object = new $className();
             foreach ($attributes as $attribute => $value) {
                 $object->$attribute = $this->unmarshal($value);
             }
-        }
-        catch (\Throwable $e) {
-            $object = null;
-        }
+        ////}
+        //catch (\Throwable $e) {
+        //    $object = null;
+        //}
 
         return $object;
     }
