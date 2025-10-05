@@ -8,14 +8,17 @@ use App\Modules\Report\Interface\ReportMessageInterface;
 class ReportMessage
 {
     private JsonSerializer $jsonSerializer;
+    
+    public string $type = '';
     public string $serializedMessage = '';
 
     public function __construct(
-        public readonly string $type = '',
-        private readonly ReportMessageInterface $message,        
+        string $type = '',
+        ReportMessageInterface $message,        
     ) {
+        $this->type = $type;
         $this->jsonSerializer = new JsonSerializer();
-        $this->serializedMessage = $this->jsonSerializer->serialize($this->message);
+        $this->serializedMessage = $this->jsonSerializer->serialize($message);
     }
 
     /**

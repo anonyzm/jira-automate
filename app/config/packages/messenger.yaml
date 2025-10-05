@@ -1,5 +1,10 @@
 framework:
     messenger:
+        buses:
+            default:
+                middleware:
+                    - App\Messenger\Middleware\LoggerMiddleware
+                   
         transports:
             jira_event_transport:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'

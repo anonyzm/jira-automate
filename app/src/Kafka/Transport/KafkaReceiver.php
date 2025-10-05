@@ -2,6 +2,7 @@
 
 namespace App\Kafka\Transport;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\TransportException;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
@@ -13,7 +14,11 @@ class KafkaReceiver implements ReceiverInterface
     private SerializerInterface $serializer;
     private Connection $connection;
 
-    public function __construct(Connection $connection, SerializerInterface $serializer = null)
+    public function __construct(
+        Connection $connection, 
+        SerializerInterface $serializer = null,
+        private LoggerInterface $logger
+        )
     {
         $this->connection = $connection;
         $this->serializer = $serializer ?? new PhpSerializer();
@@ -41,24 +46,43 @@ class KafkaReceiver implements ReceiverInterface
     private function getEnvelope(): iterable
     {
         try {
-            $kafkaMessage = $this->connection->get();
-        } catch (\RdKafka\Exception $exception) {
+            $kafkaMessage = $this->connection->get();       
+
+            if (RD_KAFKA_RESP_ERR_NO_ERROR !== $kafkaMessage->err) {
+                switch ($kafkaMessage->err) {
+                    case RD_KAFKA_RESP_ERR__PARTITION_EOF: // No more messages
+                    case RD_KAFKA_RESP_ERR__TIMED_OUT: // Attempt to connect again
+                        return;
+                    default:
+                        throw new TransportException($kafkaMessage->errstr(), $kafkaMessage->err);
+                }
+            }
+
+            $this->logger->info('KafkaReceiver:getEnvelop Success', [
+                'payload' => $kafkaMessage->payload,
+                'headers' => $kafkaMessage->headers,
+            ]);
+        } catch (\Throwable $exception) {
+            $this->logger->error('KafkaReceiver:getEnvelop Error', [
+                'error' => $exception->getMessage(),
+                'stacktrace' => $exception->getTraceAsString(),
+            ]);
             throw new TransportException($exception->getMessage(), 0, $exception);
         }
 
-        if (RD_KAFKA_RESP_ERR_NO_ERROR !== $kafkaMessage->err) {
-            switch ($kafkaMessage->err) {
-                case RD_KAFKA_RESP_ERR__PARTITION_EOF: // No more messages
-                case RD_KAFKA_RESP_ERR__TIMED_OUT: // Attempt to connect again
-                    return;
-                default:
-                    throw new TransportException($kafkaMessage->errstr(), $kafkaMessage->err);
-            }
+        try {
+            yield $this->serializer->decode([
+                'body' => $kafkaMessage->payload,
+                'headers' => $kafkaMessage->headers,
+            ]);
+        } catch (\Throwable $exception) {
+            $this->logger->error('KafkaReceiver:getEnvelop Serializer Error', [
+                'error' => $exception->getMessage(),
+                'stacktrace' => $exception->getTraceAsString(),
+                'payload' => $kafkaMessage->payload,
+                'headers' => $kafkaMessage->headers,
+            ]);
+            throw new TransportException($exception->getMessage(), 0, $exception);
         }
-
-        yield $this->serializer->decode([
-            'body' => $kafkaMessage->payload,
-            'headers' => $kafkaMessage->headers,
-        ]);
     }
 }

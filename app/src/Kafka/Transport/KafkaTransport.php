@@ -2,6 +2,7 @@
 
 namespace App\Kafka\Transport;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -15,7 +16,10 @@ class KafkaTransport implements TransportInterface, SetupableTransportInterface
     private KafkaReceiver $receiver;
     private KafkaSender $sender;
 
-    public function __construct(Connection $connection, SerializerInterface $serializer = null)
+    public function __construct(
+        Connection $connection, 
+        SerializerInterface $serializer = null, 
+        private LoggerInterface $logger)
     {
         $this->connection = $connection;
         $this->serializer = $serializer ?? new PhpSerializer();
@@ -48,7 +52,7 @@ class KafkaTransport implements TransportInterface, SetupableTransportInterface
 
     private function getReceiver(): KafkaReceiver
     {
-        return $this->receiver ??= new KafkaReceiver($this->connection, $this->serializer);
+        return $this->receiver ??= new KafkaReceiver($this->connection, $this->serializer, $this->logger);
     }
 
     private function getSender(): KafkaSender
