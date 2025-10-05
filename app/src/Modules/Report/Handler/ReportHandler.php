@@ -22,11 +22,11 @@ class ReportHandler
         $this->logger->info('[ReportHandler:__invoke]');
         $this->logger->info('[ReportHandler:__invoke]', [
             'type' => $message->type, 
-            'message' => $message->getMessage()->message()
+            'message' => $message->message->message()
         ]);
         try {
             // отправляем уведомление
-            $this->reportService->sendMessage($message->getMessage()->message());
+            $this->reportService->sendMessage($message->message->message());
         } catch (\Exception $e) {
             $this->logger->error('[ReportHandler:__invoke] Error', [
                 'error' => $e->getMessage(),

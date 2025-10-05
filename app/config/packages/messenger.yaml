@@ -15,6 +15,8 @@ framework:
                     producer_topic: '%env(KAFKA_TOPIC_EVENT)%'
                     consumer_topics: 
                         - '%env(KAFKA_TOPIC_EVENT)%'
+                    retries: '0'
+                    message.send.max.retries: '0'
 
             report_transport:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
@@ -24,7 +26,9 @@ framework:
                     auto.offset.reset: 'earliest'
                     producer_topic: '%env(KAFKA_TOPIC_REPORT)%'
                     consumer_topics: 
-                        - '%env(KAFKA_TOPIC_REPORT)%'            
+                        - '%env(KAFKA_TOPIC_REPORT)%'
+                    retries: '0'
+                    message.send.max.retries: '0'            
 
         routing:
             'App\Messenger\DTO\AutomateMessage': jira_event_transport

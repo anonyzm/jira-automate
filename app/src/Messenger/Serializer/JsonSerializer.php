@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Messenger;
+namespace App\Messenger\Serializer;
 
 use \Symfony\Component\Serializer\SerializerInterface;
-use Psr\Log\LoggerInterface;
 
 class JsonSerializer implements SerializerInterface    
 {

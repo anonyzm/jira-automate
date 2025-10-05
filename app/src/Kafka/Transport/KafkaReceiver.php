@@ -78,6 +78,7 @@ class KafkaReceiver implements ReceiverInterface
         } catch (\Throwable $exception) {
             $this->logger->error('KafkaReceiver:getEnvelop Serializer Error', [
                 'error' => $exception->getMessage(),
+                'serializer' => get_class($this->serializer),
                 'stacktrace' => $exception->getTraceAsString(),
                 'payload' => $kafkaMessage->payload,
                 'headers' => $kafkaMessage->headers,

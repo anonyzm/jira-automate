@@ -4,10 +4,12 @@ namespace App\Kafka\Transport;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\SetupableTransportInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
+use App\Messenger\Serializer\SimpleSerializer;
 
 class KafkaTransport implements TransportInterface, SetupableTransportInterface
 {
@@ -22,7 +24,7 @@ class KafkaTransport implements TransportInterface, SetupableTransportInterface
         private LoggerInterface $logger)
     {
         $this->connection = $connection;
-        $this->serializer = $serializer ?? new PhpSerializer();
+        $this->serializer = /** $serializer ?? */ new SimpleSerializer();
     }
 
     public function setup(): void

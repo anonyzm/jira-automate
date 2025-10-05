@@ -26,6 +26,7 @@ services:
       JIRA_AI_TAG: ${JIRA_AI_TAG}
       JIRA_AI_BASE_STATUS: ${JIRA_AI_BASE_STATUS}
       JIRA_AI_ASSIGNEE: ${JIRA_AI_ASSIGNEE}
+      PACHKA_WEBHOOK: ${PACHKA_WEBHOOK}
     networks:
       - jira-automate
     depends_on:
