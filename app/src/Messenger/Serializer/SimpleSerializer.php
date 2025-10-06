@@ -49,7 +49,6 @@ class SimpleSerializer implements SerializerInterface
         if ('' === $contents) {
             throw new MessageDecodingFailedException('Could not decode an empty message using PHP serialization.');
         }
-        //file_put_contents('/opt/app/contents.txt', $contents, FILE_APPEND);
         try {
             /** @var Envelope */
             $envelope = unserialize($contents);
